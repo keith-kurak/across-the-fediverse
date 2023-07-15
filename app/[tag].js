@@ -1,19 +1,18 @@
 import { useCallback } from "react";
-import { StyleSheet, FlatList } from "react-native";
+import { StyleSheet, FlatList, View } from "react-native";
 import { ListItem } from "@rneui/base";
+import { Image } from "@rneui/themed";
+import { useLocalSearchParams, Stack } from 'expo-router';
 import {
   useQuery,
-  useMutation,
-  useQueryClient,
-  QueryClient,
-  QueryClientProvider,
 } from "@tanstack/react-query";
 
-import EditScreenInfo from "@/components/EditScreenInfo";
-import { Text, View } from "@/components/Themed";
+import { Text } from "@/components/Themed";
 import axios from "axios";
 
-export default function TabOneScreen() {
+export default function TagScreen() {
+  const { tag } = useLocalSearchParams();
+
   const onRenderItem = useCallback(({ item }) => {
     console.log(item);
     return (
@@ -22,6 +21,11 @@ export default function TabOneScreen() {
           <ListItem.Title>{item.account.username}</ListItem.Title>
           <ListItem.Content>{item.content}</ListItem.Content>
         </ListItem.Content>
+        <View style={{ flexDirection: 'row' }}>
+          {item.media_attachments?.filter(m => m.type === 'image').map(imageMedia => 
+            <Image containerStyle={{ height: 100, width: 100 }} source={{ uri: imageMedia.preview_url }} />   
+          )}
+        </View>
       </ListItem>
     );
   }, []);
@@ -30,18 +34,17 @@ export default function TabOneScreen() {
     queryKey: ["publicTimeline"],
     queryFn: () =>
       axios
-        .get("https://mastodon.social/api/v1/timelines/public")
+        .get(`https://mastodon.social/api/v1/timelines/tag/${tag}`)
         .then((res) => res.data),
-  });
+  }, [tag]);
 
   if (isLoading) return <Text>'Loading...'</Text>;
 
   if (error) return "An error has occurred: " + <Text>error.message</Text>;
 
-  console.log(data);
-
   return (
     <View style={styles.container}>
+      <Stack.Screen options={{ title: tag }} />
       <FlatList
         data={data}
         renderItem={onRenderItem}
