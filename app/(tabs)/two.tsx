@@ -11,7 +11,6 @@ import axios from "axios";
 
 export default function TabTwoScreen() {
   const onRenderItem = useCallback(({ item }) => {
-    console.log(item);
     return (
       <ListItem
         onPress={() =>
@@ -44,7 +43,7 @@ export default function TabTwoScreen() {
       <FlatList
         data={data}
         renderItem={onRenderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.name}
       />
     </View>
   );

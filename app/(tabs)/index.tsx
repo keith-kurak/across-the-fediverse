@@ -1,29 +1,19 @@
 import { useCallback } from "react";
 import { StyleSheet, FlatList } from "react-native";
-import { ListItem } from "@rneui/base";
+import { useTheme } from "@rneui/themed";
 import {
   useQuery,
-  useMutation,
-  useQueryClient,
-  QueryClient,
-  QueryClientProvider,
 } from "@tanstack/react-query";
 
-import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
 import axios from "axios";
+import Post from '../../components/Post'
 
 export default function TabOneScreen() {
+  const { theme } = useTheme();
+  console.log(theme);
   const onRenderItem = useCallback(({ item }) => {
-    console.log(item);
-    return (
-      <ListItem>
-        <ListItem.Content>
-          <ListItem.Title>{item.account.username}</ListItem.Title>
-          <ListItem.Content>{item.content}</ListItem.Content>
-        </ListItem.Content>
-      </ListItem>
-    );
+    return <Post item={item} />
   }, []);
 
   const { isLoading, error, data, isFetching } = useQuery({
@@ -37,8 +27,6 @@ export default function TabOneScreen() {
   if (isLoading) return <Text>'Loading...'</Text>;
 
   if (error) return "An error has occurred: " + <Text>error.message</Text>;
-
-  console.log(data);
 
   return (
     <View style={styles.container}>
