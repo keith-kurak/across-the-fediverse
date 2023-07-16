@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { StyleSheet, FlatList, View } from "react-native";
 import { ListItem } from "@rneui/base";
 import { Image } from "@rneui/themed";
+import RenderHtml from 'react-native-render-html';
 import { useLocalSearchParams, Stack } from 'expo-router';
 import {
   useQuery,
@@ -19,7 +20,7 @@ export default function TagScreen() {
       <ListItem>
         <ListItem.Content>
           <ListItem.Title>{item.account.username}</ListItem.Title>
-          <ListItem.Content>{item.content}</ListItem.Content>
+          <ListItem.Content><RenderHtml source={{ html: item.content}}/></ListItem.Content>
         </ListItem.Content>
         <View style={{ flexDirection: 'row' }}>
           {item.media_attachments?.filter(m => m.type === 'image').map(imageMedia => 
