@@ -16,6 +16,7 @@ export default function Post({ item }) {
             ?.filter((m) => m.type === "image")
             .map((imageMedia) => (
               <Image
+                key={imageMedia.id}
                 containerStyle={{ height: 100, width: 100 }}
                 source={{ uri: imageMedia.preview_url }}
               />

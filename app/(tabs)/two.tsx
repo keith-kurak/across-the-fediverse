@@ -2,9 +2,7 @@ import { useCallback } from "react";
 import { StyleSheet, FlatList } from "react-native";
 import { ListItem } from "@rneui/base";
 import { router } from "expo-router";
-import {
-  useQuery,
-} from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { Text, View } from "@/components/Themed";
 import axios from "axios";
@@ -14,7 +12,10 @@ export default function TabTwoScreen() {
     return (
       <ListItem
         onPress={() =>
-          router.push({ pathname: "/[tag]", params: { tag: item.name } })
+          router.push({
+            pathname: "/[network]/tags/[tag]",
+            params: { network: "mastadon.social", tag: item.name },
+          })
         }
       >
         <ListItem.Content>

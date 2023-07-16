@@ -3,7 +3,7 @@ import { StyleSheet, FlatList, View } from "react-native";
 import { Divider } from "@rneui/themed";
 import { useLocalSearchParams, Stack } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
-import Post from '../components/Post'
+import Post from '../../../../components/Post'
 
 import { Text } from "@/components/Themed";
 import axios from "axios";
@@ -17,7 +17,7 @@ export default function TagScreen() {
 
   const { isLoading, error, data, isFetching } = useQuery(
     {
-      queryKey: ["publicTimeline"],
+      queryKey: ["publicTiPostmeline"],
       queryFn: () =>
         axios
           .get(`https://mastodon.social/api/v1/timelines/tag/${tag}`)
