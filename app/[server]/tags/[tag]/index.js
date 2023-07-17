@@ -3,24 +3,28 @@ import { StyleSheet, FlatList, View } from "react-native";
 import { Divider } from "@rneui/themed";
 import { useLocalSearchParams, Stack } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
-import Post from '../../../../components/Post'
+import Post from "../../../../components/Post";
 
 import { Text } from "@/components/Themed";
 import axios from "axios";
 
 export default function TagScreen() {
-  const { tag } = useLocalSearchParams();
+  const { tag, server } = useLocalSearchParams();
 
   const onRenderItem = useCallback(({ item }) => {
-    return <Post item={item} />
+    return <Post item={item} />;
   }, []);
 
   const { isLoading, error, data, isFetching } = useQuery(
     {
-      queryKey: ["publicTiPostmeline"],
+      queryKey: [`timeline-${server}-${tag}`],
       queryFn: () =>
         axios
-          .get(`https://mastodon.social/api/v1/timelines/tag/${tag}`)
+          .get(
+            tag === "public"
+              ? `https://${server}/api/v1/timelines/public?local=true`
+              : `https://${server}/api/v1/timelines/tag/${tag}?local=true`,
+          )
           .then((res) => res.data),
     },
     [tag],

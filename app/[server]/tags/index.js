@@ -1,21 +1,22 @@
 import { useCallback } from "react";
 import { StyleSheet, FlatList } from "react-native";
 import { ListItem } from "@rneui/base";
-import { router, Tabs } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
+import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 
 import { Text, View } from "@/components/Themed";
 import axios from "axios";
 
-export default function TabTwoScreen() {
+export default function TagsScreen() {
+  const { server } = useLocalSearchParams();
+
   const onRenderItem = useCallback(({ item }) => {
     return (
       <ListItem
         onPress={() =>
           router.push({
             pathname: "/[server]/tags/[tag]",
-            params: { server: "mastadon.social", tag: item.name },
+            params: { server, tag: item.name },
           })
         }
       >
@@ -27,10 +28,10 @@ export default function TabTwoScreen() {
   }, []);
 
   const { isLoading, error, data, isFetching } = useQuery({
-    queryKey: ["popularTags"],
+    queryKey: [`popularTags-${server}`],
     queryFn: () =>
       axios
-        .get("https://mastodon.social/api/v1/trends/tags")
+        .get(`https://${server}/api/v1/trends/tags?local=true`)
         .then((res) => res.data),
   });
 
@@ -40,16 +41,9 @@ export default function TabTwoScreen() {
 
   return (
     <View style={styles.container}>
-      <Tabs.Screen
-        options={{
-          title: "Favorites",
-          tabBarIcon: ({ color }) => (
-            <Ionicons color={color} size={20} name="star-outline" />
-          ),
-        }}
-      />
+      <Stack.Screen options={{ title: server }} />
       <FlatList
-        data={data}
+        data={[{ name: 'public'}, ...data]}
         renderItem={onRenderItem}
         keyExtractor={(item) => item.name}
       />
